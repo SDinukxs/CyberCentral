@@ -127,5 +127,29 @@
 
     loadNews();
   </script>
+  async function loadNews() {
+  const now = new Date();
+  const toDate = now.toISOString();
+  const from24h = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+  const from7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
+
+  console.log("Fetching news from last 24h:", from24h, "to", toDate);
+
+  let articles = await fetchNews(from24h, toDate);
+
+  if (articles.length === 0) {
+    console.log("No news in last 24h, checking last 7 days...");
+    articles = await fetchNews(from7d, toDate);
+  }
+
+  if (articles.length > 0) {
+    console.log("Fetched articles:", articles.length);
+    displayNews(articles);
+  } else {
+    console.log("Still no news. Showing message.");
+    noNewsMsg.classList.remove('hidden');
+  }
+}
+
 </body>
 </html>
