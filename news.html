@@ -115,23 +115,20 @@
       });
     }
 
-    async function loadNews() {
-      const now = new Date();
-      const toDate = now.toISOString();
-      const from24h = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
-      const from7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
-
-      let articles = await fetchNews(from24h, toDate);
-      if (articles.length === 0) {
-        articles = await fetchNews(from7d, toDate);
-      }
-
-      if (articles.length > 0) {
-        displayNews(articles);
-      } else {
-        noNewsMsg.classList.remove('hidden');
-      }
+      async function fetchNews(fromDate, toDate) {
+    const base = `https://newsapi.org/v2/everything?q=AI%20OR%20cybersecurity&language=en&from=${fromDate}&to=${toDate}&sortBy=publishedAt&pageSize=8&apiKey=${apiKey}`;
+    const url = `https://corsproxy.io/?${encodeURIComponent(base)}`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      console.log("Fetched:", data);
+      return data.articles || [];
+    } catch (error) {
+      console.error('Fetch error:', error);
+      return [];
     }
+  }
+
 
     loadNews();
   </script>
