@@ -54,9 +54,8 @@
   <footer class="text-center py-6 border-t border-gray-800 mt-8">
     <p class="text-gray-500 text-sm">&copy; 2025 CyberCentral | Made for curious minds</p>
   </footer>
-
 <script>
-  const apiKey = 'd2a836ba8e664239b8f164a58dfaaf27'; // ✅ Your key is valid
+  const apiKey = 'd2a836ba8e664239b8f164a58dfaaf27'; // your valid key
   const newsContainer = document.getElementById('news-container');
   const noNewsMsg = document.getElementById('no-news');
 
@@ -115,22 +114,27 @@
     const from24h = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
     const from7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
+    console.log("Fetching news from last 24h:", from24h, "to", toDate);
+
     let articles = await fetchNews(from24h, toDate);
 
-    if (!articles.length) {
-      console.log("⚠️ No fresh news found. Trying fallback (last 7 days)");
+    if (articles.length === 0) {
+      console.log("No news in last 24h, checking last 7 days...");
       articles = await fetchNews(from7d, toDate);
     }
 
     if (articles.length > 0) {
+      console.log("Fetched articles:", articles.length);
       displayNews(articles);
     } else {
+      console.log("Still no news. Showing message.");
       noNewsMsg.classList.remove('hidden');
     }
   }
 
   loadNews();
 </script>
+
 
 </body>
 </html>
