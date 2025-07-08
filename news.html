@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI & Cyber News - CyberCentral</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -41,9 +41,7 @@
   <main class="container mx-auto px-6 py-16">
     <h1 class="text-4xl font-bold mb-10 text-center text-cyan-400">Latest AI & Cybersecurity News</h1>
 
-    <div id="news-container" class="grid md:grid-cols-2 gap-8">
-      <!-- News cards will be inserted here dynamically -->
-    </div>
+    <div id="news-container" class="grid md:grid-cols-2 gap-8"></div>
 
     <p id="no-news" class="text-center text-sm text-gray-500 mt-12 hidden">
       Couldn’t load any news at the moment. Please try again later.
@@ -54,88 +52,88 @@
   <footer class="text-center py-6 border-t border-gray-800 mt-8">
     <p class="text-gray-500 text-sm">&copy; 2025 CyberCentral | Made for curious minds</p>
   </footer>
-<script>
-  const apiKey = 'd2a836ba8e664239b8f164a58dfaaf27';
-  const newsContainer = document.getElementById('news-container');
-  const noNewsMsg = document.getElementById('no-news');
 
-  async function fetchNews(fromDate, toDate) {
-    const url = `https://newsapi.org/v2/everything?q=AI%20OR%20cybersecurity&language=en&from=${fromDate}&to=${toDate}&sortBy=publishedAt&pageSize=8&apiKey=${apiKey}`;
-    console.log("🔍 Fetching:", url);
-    try {
-      const response = await fetch(url);
-      const data = await response.json();
-      console.log("📦 API response:", data);
-      return data.articles || [];
-    } catch (error) {
-      console.error('❌ Fetch error:', error);
-      return [];
-    }
-  }
+  <!-- Live News Script -->
+  <script>
+    const apiKey = 'd2a836ba8e664239b8f164a58dfaaf27';
+    const newsContainer = document.getElementById('news-container');
+    const noNewsMsg = document.getElementById('no-news');
 
-  function displayNews(articles) {
-    console.log("📰 Displaying articles:", articles.length);
-    newsContainer.innerHTML = '';
-    articles.forEach(article => {
-      const card = document.createElement('div');
-      card.className = 'bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300';
-
-      const title = document.createElement('h2');
-      title.className = 'text-xl font-semibold mb-2';
-      title.textContent = article.title;
-
-      const desc = document.createElement('p');
-      desc.className = 'text-gray-400';
-      desc.textContent = article.description || 'No description available.';
-
-      const sourceDiv = document.createElement('div');
-      sourceDiv.className = 'mt-4 flex items-center text-sm text-gray-500';
-
-      const sourceLabel = document.createElement('span');
-      sourceLabel.className = 'mr-2';
-      sourceLabel.textContent = 'Source:';
-
-      const sourceName = document.createElement('span');
-      sourceName.className = 'bg-gray-700 text-cyan-400 px-2 py-1 rounded';
-      sourceName.textContent = article.source.name;
-
-      sourceDiv.appendChild(sourceLabel);
-      sourceDiv.appendChild(sourceName);
-
-      card.appendChild(title);
-      card.appendChild(desc);
-      card.appendChild(sourceDiv);
-
-      newsContainer.appendChild(card);
-    });
-  }
-
-  async function loadNews() {
-    const now = new Date();
-    const toDate = now.toISOString();
-    const from24h = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
-    const from7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
-
-    console.log("⏱ Trying news from last 24 hours...");
-    let articles = await fetchNews(from24h, toDate);
-
-    if (articles.length === 0) {
-      console.log("⚠️ No fresh news found. Trying last 7 days...");
-      articles = await fetchNews(from7d, toDate);
+    async function fetchNews(fromDate, toDate) {
+      const url = `https://newsapi.org/v2/everything?q=AI%20OR%20cybersecurity&language=en&from=${fromDate}&to=${toDate}&sortBy=publishedAt&pageSize=8&apiKey=${apiKey}`;
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log("Fetched:", data);
+        return data.articles || [];
+      } catch (error) {
+        console.error('Fetch error:', error);
+        return [];
+      }
     }
 
-    if (articles.length > 0) {
-      displayNews(articles);
-    } else {
-      console.log("❌ Still no news found.");
-      noNewsMsg.classList.remove('hidden');
+    function displayNews(articles) {
+      newsContainer.innerHTML = '';
+      articles.forEach(article => {
+        const card = document.createElement('div');
+        card.className = 'bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300';
+
+        const title = document.createElement('h2');
+        title.className = 'text-xl font-semibold mb-2';
+        title.textContent = article.title;
+
+        const desc = document.createElement('p');
+        desc.className = 'text-gray-400';
+        desc.textContent = article.description || 'No description available.';
+
+        const link = document.createElement('a');
+        link.href = article.url;
+        link.target = "_blank";
+        link.className = 'block text-sm text-cyan-400 mt-2 hover:underline';
+        link.textContent = 'Read more';
+
+        const sourceDiv = document.createElement('div');
+        sourceDiv.className = 'mt-4 flex items-center text-sm text-gray-500';
+
+        const sourceLabel = document.createElement('span');
+        sourceLabel.className = 'mr-2';
+        sourceLabel.textContent = 'Source:';
+
+        const sourceName = document.createElement('span');
+        sourceName.className = 'bg-gray-700 text-cyan-400 px-2 py-1 rounded';
+        sourceName.textContent = article.source.name || 'Unknown';
+
+        sourceDiv.appendChild(sourceLabel);
+        sourceDiv.appendChild(sourceName);
+
+        card.appendChild(title);
+        card.appendChild(desc);
+        card.appendChild(link);
+        card.appendChild(sourceDiv);
+
+        newsContainer.appendChild(card);
+      });
     }
-  }
 
-  loadNews();
-</script>
+    async function loadNews() {
+      const now = new Date();
+      const toDate = now.toISOString();
+      const from24h = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+      const from7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
+      let articles = await fetchNews(from24h, toDate);
+      if (articles.length === 0) {
+        articles = await fetchNews(from7d, toDate);
+      }
 
+      if (articles.length > 0) {
+        displayNews(articles);
+      } else {
+        noNewsMsg.classList.remove('hidden');
+      }
+    }
 
+    loadNews();
+  </script>
 </body>
 </html>
