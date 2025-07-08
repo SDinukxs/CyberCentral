@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tools - CyberCentral</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0f172a;
+      color: #e2e8f0;
+    }
+    .tool-box {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .fade-in {
+      animation: fade 0.5s ease-out forwards;
+    }
+    @keyframes fade {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="sticky top-0 z-50">
+    <nav class="container mx-auto px-6 py-4 flex justify-between items-center glassy bg-gray-800 rounded-full mt-4">
+      <a href="index.html" class="text-2xl font-bold text-white">CyberCentral</a>
+      <ul class="hidden md:flex space-x-6">
+        <li><a href="news.html" class="hover:text-cyan-400">News</a></li>
+        <li><a href="tools.html" class="text-cyan-400">Tools</a></li>
+        <li><a href="chat.html" class="hover:text-cyan-400">Chat</a></li>
+        <li><a href="play.html" class="hover:text-cyan-400">Play</a></li>
+        <li><a href="about.html" class="hover:text-cyan-400">About</a></li>
+        <li><a href="contact.html" class="hover:text-cyan-400">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Tools Area -->
+  <main class="container mx-auto px-6 py-16">
+    <h1 class="text-4xl font-bold text-center text-cyan-400 mb-10">Useful AI-Powered Tools</h1>
+
+    <textarea id="inputText" rows="6" class="w-full p-4 text-black rounded mb-8" placeholder="Enter your text here..."></textarea>
+
+    <div class="grid md:grid-cols-2 gap-6">
+
+      <!-- Reverse Text -->
+      <div class="tool-box">
+        <h2 class="text-xl font-semibold mb-2">🔁 Reverse Text</h2>
+        <button onclick="reverseText()" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded mt-2">Reverse</button>
+        <p id="reverseOutput" class="mt-3 text-green-400"></p>
+      </div>
+
+      <!-- Case Converter -->
+      <div class="tool-box">
+        <h2 class="text-xl font-semibold mb-2">🔤 Text Case Converter</h2>
+        <button onclick="toUpperCaseText()" class="bg-purple-600 px-3 py-2 rounded mr-2 mt-2">UPPERCASE</button>
+        <button onclick="toLowerCaseText()" class="bg-purple-600 px-3 py-2 rounded mr-2 mt-2">lowercase</button>
+        <button onclick="toCapitalized()" class="bg-purple-600 px-3 py-2 rounded mt-2">Capitalized</button>
+        <p id="caseOutput" class="mt-3 text-green-400"></p>
+      </div>
+
+      <!-- Character & Word Count -->
+      <div class="tool-box">
+        <h2 class="text-xl font-semibold mb-2">🔢 Count Characters & Words</h2>
+        <button onclick="countText()" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded mt-2">Count</button>
+        <p id="countOutput" class="mt-3 text-green-400"></p>
+      </div>
+
+      <!-- Remove Extra Spaces -->
+      <div class="tool-box">
+        <h2 class="text-xl font-semibold mb-2">🧹 Remove Extra Spaces</h2>
+        <button onclick="removeSpaces()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded mt-2">Clean Text</button>
+        <p id="spaceOutput" class="mt-3 text-green-400"></p>
+      </div>
+
+      <!-- QR Code Generator -->
+      <div class="tool-box">
+        <h2 class="text-xl font-semibold mb-2">📷 QR Code Generator</h2>
+        <button onclick="generateQR()" class="bg-yellow-600 hover:bg-yellow-700 px-4 py-2 rounded mt-2">Generate QR</button>
+        <div id="qrOutput" class="mt-4"></div>
+      </div>
+
+      <!-- Simplify with AI -->
+      <div class="tool-box">
+        <h2 class="text-xl font-semibold mb-4">🧠 Simplify with AI</h2>
+        <button onclick="showAIBox()" class="bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded">Simplify & Chat</button>
+
+        <div id="aiBox" class="hidden mt-6 fade-in">
+          <p class="text-sm text-gray-300 mb-2">Opening simplified explanation with AI...</p>
+          <a id="chatLink" target="_blank" class="inline-block bg-gradient-to-r from-pink-500 to-blue-500 text-white px-4 py-2 rounded hover:scale-105 transition-transform">
+            Open in ChatGPT
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-6 border-t border-gray-800 mt-8">
+    <p class="text-gray-500 text-sm">&copy; 2025 CyberCentral | Tools run in-browser and respect your privacy.</p>
+  </footer>
+
+  <!-- JS Logic -->
+  <script>
+    const getText = () => document.getElementById('inputText').value;
+
+    function reverseText() {
+      document.getElementById('reverseOutput').innerText = getText().split('').reverse().join('');
+    }
+
+    function toUpperCaseText() {
+      document.getElementById('caseOutput').innerText = getText().toUpperCase();
+    }
+
+    function toLowerCaseText() {
+      document.getElementById('caseOutput').innerText = getText().toLowerCase();
+    }
+
+    function toCapitalized() {
+      const txt = getText().toLowerCase().split(' ');
+      const capped = txt.map(word => word.charAt(0).toUpperCase() + word.slice(1));
+      document.getElementById('caseOutput').innerText = capped.join(' ');
+    }
+
+    function countText() {
+      const txt = getText().trim();
+      const charCount = txt.length;
+      const wordCount = txt.split(/\s+/).filter(Boolean).length;
+      document.getElementById('countOutput').innerText = `Characters: ${charCount} | Words: ${wordCount}`;
+    }
+
+    function removeSpaces() {
+      const cleaned = getText().replace(/\s+/g, ' ').trim();
+      document.getElementById('spaceOutput').innerText = cleaned;
+    }
+
+    function generateQR() {
+      const value = getText();
+      const qrOutput = document.getElementById("qrOutput");
+      qrOutput.innerHTML = "";
+      if (value.trim()) {
+        QRCode.toCanvas(document.createElement("canvas"), value, (err, canvas) => {
+          if (!err) qrOutput.appendChild(canvas);
+        });
+      }
+    }
+
+    function showAIBox() {
+      const base = "https://chat.openai.com/";
+      const prompt = encodeURIComponent("Please explain this simply:\n" + getText());
+      const link = `${base}?model=text-davinci-003&prompt=${prompt}`;
+      document.getElementById("chatLink").href = link;
+      document.getElementById("aiBox").classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
