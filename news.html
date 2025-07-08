@@ -55,101 +55,82 @@
     <p class="text-gray-500 text-sm">&copy; 2025 CyberCentral | Made for curious minds</p>
   </footer>
 
-  <script>
-    const apiKey = 'd2a836ba8e664239b8f164a58dfaaf27'; // 🔁 Replace with your actual NewsAPI key
-    const newsContainer = document.getElementById('news-container');
-    const noNewsMsg = document.getElementById('no-news');
+<script>
+  const apiKey = 'd2a836ba8e664239b8f164a58dfaaf27'; // ✅ Your key is valid
+  const newsContainer = document.getElementById('news-container');
+  const noNewsMsg = document.getElementById('no-news');
 
-    async function fetchNews(fromDate, toDate) {
-      const url = `https://newsapi.org/v2/everything?q=AI%20OR%20cybersecurity&language=en&from=${fromDate}&to=${toDate}&sortBy=publishedAt&pageSize=8&apiKey=${apiKey}`;
+  async function fetchNews(fromDate, toDate) {
+    const url = `https://newsapi.org/v2/everything?q=AI%20OR%20cybersecurity&language=en&from=${fromDate}&to=${toDate}&sortBy=publishedAt&pageSize=8&apiKey=${apiKey}`;
 
-      const res = await fetch(url);
-      const data = await res.json();
-      return data.status === 'ok' ? data.articles : [];
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      return data.articles || [];
+    } catch (error) {
+      console.error('API fetch failed:', error);
+      return [];
     }
+  }
 
-    function displayNews(articles) {
-      newsContainer.innerHTML = '';
-      articles.forEach(article => {
-        const card = document.createElement('div');
-        card.className = 'bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300';
+  function displayNews(articles) {
+    newsContainer.innerHTML = '';
+    articles.forEach(article => {
+      const card = document.createElement('div');
+      card.className = 'bg-gray-800 p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300';
 
-        const title = document.createElement('h2');
-        title.className = 'text-xl font-semibold mb-2';
-        title.textContent = article.title;
+      const title = document.createElement('h2');
+      title.className = 'text-xl font-semibold mb-2';
+      title.textContent = article.title;
 
-        const desc = document.createElement('p');
-        desc.className = 'text-gray-400';
-        desc.textContent = article.description || 'No description available.';
+      const desc = document.createElement('p');
+      desc.className = 'text-gray-400';
+      desc.textContent = article.description || 'No description available.';
 
-        const sourceDiv = document.createElement('div');
-        sourceDiv.className = 'mt-4 flex items-center text-sm text-gray-500';
+      const sourceDiv = document.createElement('div');
+      sourceDiv.className = 'mt-4 flex items-center text-sm text-gray-500';
 
-        const sourceLabel = document.createElement('span');
-        sourceLabel.className = 'mr-2';
-        sourceLabel.textContent = 'Source:';
+      const sourceLabel = document.createElement('span');
+      sourceLabel.className = 'mr-2';
+      sourceLabel.textContent = 'Source:';
 
-        const sourceName = document.createElement('span');
-        sourceName.className = 'bg-gray-700 text-cyan-400 px-2 py-1 rounded';
-        sourceName.textContent = article.source.name;
+      const sourceName = document.createElement('span');
+      sourceName.className = 'bg-gray-700 text-cyan-400 px-2 py-1 rounded';
+      sourceName.textContent = article.source.name;
 
-        sourceDiv.appendChild(sourceLabel);
-        sourceDiv.appendChild(sourceName);
+      sourceDiv.appendChild(sourceLabel);
+      sourceDiv.appendChild(sourceName);
 
-        card.appendChild(title);
-        card.appendChild(desc);
-        card.appendChild(sourceDiv);
+      card.appendChild(title);
+      card.appendChild(desc);
+      card.appendChild(sourceDiv);
 
-        newsContainer.appendChild(card);
-      });
-    }
+      newsContainer.appendChild(card);
+    });
+  }
 
-    async function loadNews() {
-      const now = new Date();
-      const toDate = now.toISOString();
-
-      const from24h = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
-      const from7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
-
-      let articles = await fetchNews(from24h, toDate);
-
-      if (articles.length === 0) {
-        // fallback: try past 7 days
-        articles = await fetchNews(from7d, toDate);
-      }
-
-      if (articles.length > 0) {
-        displayNews(articles);
-      } else {
-        noNewsMsg.classList.remove('hidden');
-      }
-    }
-
-    loadNews();
-  </script>
   async function loadNews() {
-  const now = new Date();
-  const toDate = now.toISOString();
-  const from24h = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
-  const from7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
+    const now = new Date();
+    const toDate = now.toISOString();
+    const from24h = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+    const from7d = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
-  console.log("Fetching news from last 24h:", from24h, "to", toDate);
+    let articles = await fetchNews(from24h, toDate);
 
-  let articles = await fetchNews(from24h, toDate);
+    if (!articles.length) {
+      console.log("⚠️ No fresh news found. Trying fallback (last 7 days)");
+      articles = await fetchNews(from7d, toDate);
+    }
 
-  if (articles.length === 0) {
-    console.log("No news in last 24h, checking last 7 days...");
-    articles = await fetchNews(from7d, toDate);
+    if (articles.length > 0) {
+      displayNews(articles);
+    } else {
+      noNewsMsg.classList.remove('hidden');
+    }
   }
 
-  if (articles.length > 0) {
-    console.log("Fetched articles:", articles.length);
-    displayNews(articles);
-  } else {
-    console.log("Still no news. Showing message.");
-    noNewsMsg.classList.remove('hidden');
-  }
-}
+  loadNews();
+</script>
 
 </body>
 </html>
